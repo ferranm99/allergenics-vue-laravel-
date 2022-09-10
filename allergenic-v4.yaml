@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Allergenics-V4 API
+  description: Allergenics-V4 API
+  version: 1.0.0
+servers:
+  - url: 'https://allergenics-v4.test'
+paths:
+    '/sanctum/csrf-cookie':
+      get:
+        summary: Initialise CSRF protection for SPA authentication
+        description: Initialise CSRF protection by returning an XSRF-TOKEN to be
+                     used on future requests.
+                     A session cookie will also be set for managing authentication.
+                     This endpoint is intended for first party SPAs that are permitted to make stateful requests through a session.
+                    NOTE -- This endpoint does not use the /api/vue/v1 prefix
+        tags:
+          - session
+        responses:
+          '204':
+            description: No content with XSRF-TOKEN header and session cookie set
+    /login:
+      post:
+        tags:
+          - Authentication
+        summary: Logs user into the system
+        operationId: 'userLogin'
+        parameters:
+          - name: Content-Type
+            in: header
+            description: 'application/x-www-form-urlencoded'
+            required: true
+            style: simple
+            explode: false
+            schema:
+              type: string
+              example: application/x-www-form-urlencoded
+        requestBody:
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                required:
+                  - email
+                  - password
+                type: object
+                properties:
+                  email:
+                    type: string
+                    description: The user email for login
+                    example: admin@sourcya.com
+                  password:
+                    type: string
+                    description: The user password for login
+                    example: admin
+          required: true
+        responses:
+          '302':
+            description: successful operation, Redirect Now
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                      example: Token goes here
+                    message:
+                      type: string
+                      example: Successful user login, Redirect now.
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Invalid username/password supplied
+          '500':
+            description: Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Internal server error
+        deprecated: false
+        security:
+          - oauth2: [ ]

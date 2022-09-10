@@ -1,0 +1,89 @@
+###
+# curl "https://showday-frontend.test/sanctum/csrf-cookie"
+GET https://allergenics-v4.test/sanctum/csrf-cookie
+
+> {% client.global.set("xsrf_token", decodeURIComponent(response.headers.valueOf('Set-Cookie').split('=')[1].split(';')[0])); %}
+
+
+###
+
+POST https://allergenics-v4.test/login
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json; charset=utf-8
+Expect: application/json
+
+{
+    "email": "carl@16hands.co.nz",
+    "username": "carl@16hands.co.nz",
+    "password": "carl@16hands.co.nz"
+}
+
+
+###
+GET https://allergenics-v4.test/api/checkout/current
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+
+
+###
+
+POST https://allergenics-v4.test/api/checkout/new
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+
+{}
+
+###
+
+GET https://allergenics-v4.test/api/checkout/get/1
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+
+###
+
+POST https://allergenics-v4.test/api/checkout/update/1
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+
+{
+    "processing": "STANDARD"
+}
+
+###
+GET https://allergenics-v4.test/api/user
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+
+###
+
+
+GET https://allergenics-v4.test/api/cart/get
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+
+###
+
+GET https://allergenics-v4.test/api/cart/clear
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+
+###
+
+GET https://allergenics-v4.test/api/cart/remove/8bd0c2b34127f5fceddff161c740d5ad
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+
+###

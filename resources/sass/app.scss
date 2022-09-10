@@ -1,0 +1,20 @@
+//@import "../js/scss/global";
+
+// Variables
+//@import "~bootstrap/scss/bootstrap";
+//@import "node_modules/bootstrap/scss/_variables";
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap-vue/src/index.scss";
+@import "normalize";
+@import "variables";
+@import "fonts";
+@import "mixins";
+@import "animate";
+@import "typography";
+@import "common";
+@import "buttons";
+@import "forms";
+@import "header";
+@import "footer";
+@import "pages";
+

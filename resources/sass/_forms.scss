@@ -1,0 +1,598 @@
+.ag-form-block {
+    padding: 30px 0;
+
+    @include media-breakpoint-up(md) {
+        padding: 64px 0;
+    }
+
+    h2, h1 {
+        color: $green;
+        font-size: 30px;
+
+        @include media-breakpoint-up(md) {
+            font-size: 33px;
+            margin-bottom: 38px;
+        }
+    }
+
+    .ag-form-info {
+        margin: 0 0 18px;
+        font-size: 15px;
+
+        @include media-breakpoint-up(md) {
+            margin: 0 0 38px;
+        }
+
+        a {
+            color: $l-red;
+            text-decoration: underline;
+
+            &:hover {
+                color: $green;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.ag-form-wrap {
+    @include media-breakpoint-up(lg) {
+        margin: 0 -30px 30px;
+    }
+    &.order-form{
+        .ag-form-hold{
+            p{
+                margin-top: 10px;
+            }
+            border-top: 1px solid $gray-darker;
+            border-left: 1px solid $gray-darker;
+            border-right: 1px solid $gray-darker;
+            padding-left: 10px;
+            position: relative;
+            &:last-child{
+                border-left: none;
+                border-right: none;
+                &:after{
+                    display: none;
+                }
+            }
+            &:after{
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                background: $gray-darker;
+                left: 0;
+                right: 0;
+                top: 30px;
+            }
+            @include media-breakpoint-up(sm) {
+                p{
+                    margin-top: 0;
+                }
+                &:after{
+                    width: 1px;
+                    height: 100%;
+                    left: 150px;
+                    right: auto;
+                    top: 0;
+                    bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+.ag-form-hold {
+    @extend .clearfix;
+    font-size: 15px;
+    padding: 4px 0 9px;
+
+    .ag-title {
+        font-size: 13px;
+        color: $green;
+        display: block;
+    }
+
+    p {
+        a {
+            color: #414042;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.ag-form {
+    .ag-payment-info {
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        margin: 0 0 30px;
+
+        @include media-breakpoint-up(md) {
+            padding: 20px 0 0 40px;
+            margin: 0;
+        }
+    }
+    .ag-forgot {
+        font-size: 15px;
+        color: #414042;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .ag-member {
+        font-size: 15px;
+        color: #414042;
+        float: right;
+        margin-right: 20px;
+        cursor: pointer;
+    }
+}
+
+.ag-input-box {
+    @extend .clearfix;
+
+    .ag-btn-wrap {
+        float: right;
+        width: 117px;
+
+        .agg-button {
+            min-width: 1px;
+            height: 50px;
+        }
+    }
+
+    .ag-form-control {
+        float: left;
+        width: calc(100% - 130px);
+    }
+}
+
+.ag-form-group {
+    margin-bottom: 15px;
+
+    @include media-breakpoint-up(md) {
+        margin-bottom: 27px;
+    }
+
+    label {
+        font-size: 13px;
+        color: $green;
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: 7px;
+    }
+}
+
+input.ag-form-control,
+textarea.ag-form-control {
+    width: 100%;
+    height: 50px;
+    outline: none !important;
+    border: 1px solid #ccc;
+    color: #414042;
+    font-size: 15px;
+    transition: border 0.3s;
+    border-radius: 0;
+    @include placeholder {
+        color: #a7a9ac;
+    }
+
+    &:focus {
+        border-color: $l-red;
+    }
+}
+
+.ag-submit-wrapper {
+    padding: 40px 0;
+
+    @include media-breakpoint-up(lg) {
+        padding: 121px 0 93px;
+    }
+}
+
+
+//REGISTER AND CONTACT FORM
+
+#register,
+#ag-contact-form{
+    .gform_confirmation_wrapper{
+        .gform_confirmation_message{
+            text-align: center;
+        }
+    }
+
+    .gform_wrapper div.validation_error{
+        color: $l-red;
+        font-weight: 300;
+        border-top: 1px solid $l-red;
+        border-bottom: 1px solid $l-red;
+    }
+
+    form{
+        div.ginput_container{
+            margin-top: 0;
+        }
+        li.ag-form-group{
+            padding: 0 15px;
+            margin: 0 0 20px 0;
+            &.gfield.gfield_error{
+                background: none;
+                border: none;
+                max-width: 100%;
+                &.gf_left_half,
+                &.gf_right_half{
+                    max-width: 100%;
+                    @include media-breakpoint-up(md) {
+                        max-width: 50%;
+                    }
+                }
+                label{
+                    margin-top: 0;
+                }
+                input,
+                textarea{
+                    border-color: $l-red;
+                }
+                .gfield_description.validation_message{
+                    color: $l-red;
+                    padding-top: 3px;
+                }
+            }
+            label{
+                font-size: 13px;
+                color: $green;
+                display: inline-block;
+                vertical-align: top;
+                font-weight: 300;
+                margin-bottom: 0;
+            }
+            input,
+            textarea{
+                padding-left: 10px;
+                padding-right: 10px;
+                width: 100%;
+                outline: none !important;
+                border: 1px solid #ccc;
+                color: #414042;
+                font-size: 15px;
+                transition: border 0.3s;
+                @include placeholder {
+                    color: #a7a9ac;
+                }
+
+                &:focus {
+                    border-color: $l-red;
+                }
+            }
+            input{
+                height: 50px;
+            }
+        }
+        .gform_footer{
+            text-align: center;
+            input[type='submit']{
+                @extend .agg-button;
+                @extend .agg-button--red;
+                margin: 0;
+                &:hover{
+                    //background-image: url("../images/arrow-icon.svg");
+                    background-size: 12px;
+                    background-repeat: no-repeat;
+                    background-position: center right 20px;
+                }
+            }
+        }
+    }
+
+    .gform_wrapper.gform_validation_error .gform_body ul li.gfield.gfield_error:not(.gf_left_half):not(.gf_right_half){
+        max-width: 100%!important;
+    }
+
+    .agg-content-holder{
+        > .container{
+            max-width: 770px;
+        }
+    }
+}
+
+#ag-contact-form{
+    margin-bottom: 60px;
+}
+
+
+
+
+#wc-stripe-cc-form {
+    font-weight: 300;
+    #stripe-cvc-element,
+    #stripe-exp-element,
+    #stripe-card-element {
+        height: 50px;
+        line-height: 50px;
+        padding-top: 15px;
+        border: 1px solid #ccc;
+    }
+}
+
+//Coupon modal custom style
+
+#couponModal {
+    padding-top: 60px;
+    .modal-dialog {
+        margin: 60px auto;
+    }
+
+    .modal-body {
+        padding: 45px 30px;
+    }
+
+    .modal-header {
+        button.close {
+            float: right;
+            margin-top: -25px;
+        }
+    }
+}
+
+.ag-login-container {
+    margin: 0 auto 60px auto;
+    max-width: 480px;
+    padding: 0;
+}
+
+
+.ag-form-container {
+    padding: 0;
+    .form-control {
+        width: 100%;
+        height: 50px;
+        outline: none !important;
+        border: 1px solid #ccc;
+        color: #414042;
+        font-size: 15px;
+        -webkit-transition: border 0.3s;
+        -o-transition: border 0.3s;
+        transition: border 0.3s;
+        border-radius: 0;
+        font-weight: 300;
+        &:focus {
+            box-shadow: none;
+            border: 1px solid $l-red;
+        }
+        @include placeholder {
+            color: #a7a9ac;
+        }
+    }
+    label {
+        font-size: 13px;
+        color: $green;
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: 7px;
+        line-height: 2;
+    }
+    .form-group,
+    .form-row {
+        margin-bottom: 27px;
+    }
+
+    .form-group.required {
+        label:after {
+            content: '*';
+            color: $l-red;
+            margin-left: 2px;
+            display: inline-block;
+            font-weight: 700;
+        }
+    }
+
+    .lost-password {
+        font-size: 15px;
+        text-decoration: underline;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .custom-checkbox label {
+        font-size: 15px;
+    }
+
+    .custom-checkbox .custom-control-label::before,
+    .custom-checkbox .custom-control-label::after {
+        width: 18px;
+        height: 18px;
+    }
+
+    .custom-checkbox .custom-control-label::before {
+        border-radius: 0;
+        border: 1px solid $green;
+    }
+
+    .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: transparent;
+    }
+
+    .custom-control-input:focus ~ .custom-control-label::before {
+        box-shadow: none;
+        border: 1px solid $green;
+    }
+
+    .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+        background-size: 13px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23008288' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+    }
+
+    .ag-radio-group {
+        width: 100%;
+        border: none;
+        padding: 0;
+        margin: 0;
+
+        .custom-radio {
+            margin-bottom: 10px;
+
+            .custom-control-input:checked ~ .custom-control-label::before {
+                background-color: $green;
+            }
+        }
+
+        label {
+            font-size: 1rem;
+            color: $base-text-color;
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+
+        small {
+            font-weight: 100;
+        }
+    }
+
+    .ag-checkbox-group {
+        width: 100%;
+        border: none;
+        padding: 0;
+        margin: 0;
+
+        small {
+            font-weight: 100;
+        }
+        label {
+            font-weight: 700;
+            color: $base-text-color;
+            font-size: 1rem;
+            margin-bottom: 0;
+            line-height: 2.2;
+            padding-left: 5px;
+        }
+        .b-custom-control-lg {
+            .custom-control-label::before {
+                border: 1px solid $base-text-color;
+            }
+            .custom-control-label::before,
+            .custom-control-label::after {
+                width: 25px;
+                height: 25px;
+            }
+            .custom-control-input:checked ~ .custom-control-label::after {
+                background-size: 18px;
+            }
+        }
+    }
+
+
+
+    .customer-details {
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-row {
+            margin-bottom: 0;
+        }
+        label {
+            font-size: 1rem;
+            margin-bottom: 0;
+            line-height: 2;
+            color: $base-text-color;
+        }
+        .payment-title {
+            color: $green;
+            margin-top: 40px;
+            font-size: 33px;
+            font-weight: 300;
+            border-bottom: 1px solid #e6e6e6;
+            padding-bottom: 10px;
+        }
+        .view-table.table th,
+        .view-table.table td {
+            text-align: left;
+        }
+    }
+
+}
+
+.ag-checkout-payment {
+    .ag-form-container {
+        .custom-radio label {
+            font-weight: 500;
+            line-height: 1.6;
+        }
+    }
+}
+
+.ag-checkbox-payment {
+    label {
+        line-height: 1.6!important;
+    }
+}
+
+.ag-edit-form {
+    .form-group,
+    .form-row {
+        margin-bottom: 5px;
+        small {
+            font-size: 14px;
+            font-weight: 300;
+        }
+    }
+}
+
+.ag-payment-login {
+    &.ag-form-container label {
+        color: $text-dark;
+        margin-bottom: 0;
+        font-size: 16px;
+    }
+
+    &.ag-form-container .form-group,
+    &.ag-form-container .form-row {
+        margin-bottom: 5px;
+    }
+
+    .ag-button-row {
+        margin-top: 32px;
+    }
+}
+
+
+
+.check-poli {
+    .custom-control-label::after,
+    .custom-control-label::before {
+        top: 40% !important;
+        @include media-breakpoint-down(lg) {
+            top: 30% !important;
+        }
+    }
+}
+
+.order-payment {
+    .custom-control-label::after,
+    .custom-control-label::before {
+        top: 0.2rem;
+    }
+
+    .ag-form-container label {
+        color: #414042;
+        margin-bottom: 0;
+        font-size: 16px;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: $white;
+        pointer-events: none;
+    }
+}
+
+

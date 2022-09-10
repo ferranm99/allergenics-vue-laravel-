@@ -1,0 +1,145 @@
+###
+# curl "https://showday-frontend.test/sanctum/csrf-cookie"
+
+# this MUST post to main domain only it can not
+# subdomains regardless of which sub domain the
+# front is on
+GET https://allergenics-v4.test/sanctum/csrf-cookie
+
+> {% client.global.set("xsrf_token", decodeURIComponent(response.headers.valueOf('Set-Cookie').split('=')[1].split(';')[0])); %}
+
+
+###
+# this MUST post to main domain only it can not
+# subdomains regardless of which sub domain the
+# front is on
+POST https://allergenics-v4.test/login
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json; charset=utf-8
+Expect: application/json
+Accept: application/json
+
+{
+    "email": "carl@16hands.co.nz",
+    "username": "carl@16hands.co.nz",
+    "password": "carl@16hands.co.nz"
+}
+
+###
+GET https://allergenics-v4.test/test.php
+
+
+###
+# the Referer: needs to be the main domain,
+# it must match the one used for the sactum ookie
+POST https://allergenics-v4.test/api/order/who
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Accept: application/json
+
+{
+    "client_first_name": "Carl",
+    "client_last_name": "Bowden",
+    "client_gender": "MALE"
+
+}
+
+
+### /api/order/current
+# response: order
+
+GET https://allergenics-v4.test/api/order/current
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+Accept: application/json
+
+#res:
+#
+# full order object
+
+###
+
+POST https://allergenics-v4.test/api/order/tests
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+Accept: application/json
+
+{
+    "fees": [
+        {"processing": "URGENT"},
+        {"consultation": "YES"}
+    ],
+    "items": {
+        "id": 1
+    }
+
+}
+
+
+### /api/order/products
+# response: order
+
+GET https://allergenics-v4.test/api/order/products
+X-XSRF-TOKEN: {{xsrf_token}}
+Referer: https://allergenics-v4.test
+Content-Type: application/json
+Expect: application/json
+Accept: application/json
+
+
+###  /api/order/who
+# response {order}
+# {
+#  "data": {
+#    "id": null,
+#    "type": "HUMAN",
+#    "uuid": "d2412775-25c4-4284-b104-052d3558c68d",
+#    "user_id": 1,
+#    "status": "Cart",
+#    "client_first_name": "Carl",
+#    "client_last_name": "Bowden",
+#    "items": [
+#      "e69caf1d3ef847a93229c421d5099670": {
+#        "locale": null,
+#        "coupon": null,
+#        "lineItem": false,
+#        "active": true,
+#        "subItems": [],
+#        "currencyCode": null,
+#        "discounted": [],
+#        "options": {
+#          "id": 1,
+#          "qty": 1,
+#          "name": "Food and Environmental Sensitivity Test",
+#          "taxable": true,
+#          "price": 117,
+#          "tax": null
+#        }
+#      }],
+#    "fees": {
+#      "processing": {
+#        "tax": null,
+#        "locale": null,
+#        "amount": 100,
+#        "taxable": true,
+#        "currencyCode": null,
+#        "discounted": 0,
+#        "options": {
+#          "processing": "URGENT"
+#        }
+#      }
+#    },
+#    "coupons": [],
+#    "totals": {
+#      "subTotal": 0,
+#      "taxTotal": 0,
+#      "total": 100
+#    }
+#  }
+#}

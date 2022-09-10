@@ -1,0 +1,104 @@
+.agg-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font: 300 14px/1.2 $museosans;
+    text-transform: uppercase;
+    outline: none !important;
+    color: $green;
+    border: 1px solid $green;
+    min-width: 205px;
+    text-align: center;
+    padding: 15px 30px;
+    position: relative;
+    border-radius: 0;
+
+    .our-tests .agg-heading & ,
+    .hair-testing-service .agg-heading & {
+        color: #fff;
+        border: 1px solid $l-red;
+        background: $l-red;
+    }
+
+    &:before {
+        content: "\e902";
+        font-family: 'icomoon';
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    &:hover {
+        &:before {
+            opacity: 1;
+        }
+    }
+
+    &.agg-button--plain {
+        border-color: $white;
+        color: $white;
+    }
+
+    &.agg-button--red {
+        background: $wa-btn;
+        border-color: $wa-btn;
+        color: $white;
+    }
+
+    &.agg-button--outline {
+        border-color: $wa-btn;
+        color: $wa-btn;
+        transition: background 0.3s, color 0.3s;
+
+        &:hover {
+            background: $wa-btn;
+            color: #fff;
+        }
+    }
+
+    &.agg-button--outline-light {
+        border-color: $wa-btn;
+        color: $wa-btn;
+        transition: background 0.3s, color 0.3s;
+
+        &:hover {
+            background: transparent;
+            color: $wa-btn;
+        }
+    }
+
+
+    &.agg-button--outline-green {
+        border-color: $green;
+        color: $green;
+        transition: background 0.3s, color 0.3s;
+
+        &:hover {
+            background: transparent;
+            color: $green;
+        }
+    }
+
+    &.agg-button--filled-green {
+        background-color: $green;
+        color: $white;
+        //&:hover {
+        //  background-color: transparent;
+        //  color: $green;
+        //}
+    }
+}
+
+
+.agg-blog-cta-btn {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-link:focus {
+    box-shadow: none;
+}

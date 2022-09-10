@@ -1,0 +1,113 @@
+@font-face {
+    font-family: 'MuseoSans';
+    src: url('../js/src/assets/fonts/museosans/343C93_0_0.eot');
+    src: url('../js/src/assets/fonts/museosans/343C93_0_0.eot?#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/museosans/343C93_0_0.woff2') format('woff2'),
+    url('../js/src/assets/fonts/museosans/343C93_0_0.woff') format('woff'),
+    url('../js/src/assets/fonts/museosans/343C93_0_0.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    src: url('../js/src/assets/fonts/museosans/343C93_1_0.eot');
+    src: url('../js/src/assets/fonts/museosans/343C93_1_0.eot?#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/museosans/343C93_1_0.woff2') format('woff2'),
+    url('../js/src/assets/fonts/museosans/343C93_1_0.woff') format('woff'),
+    url('../js/src/assets/fonts/museosans/343C93_1_0.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    src: url('../js/src/assets/fonts/museosans/343C93_2_0.eot');
+    src: url('../js/src/assets/fonts/museosans/343C93_2_0.eot?#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/museosans/343C93_2_0.woff2') format('woff2'),
+    url('../js/src/assets/fonts/museosans/343C93_2_0.woff') format('woff'),
+    url('../js/src/assets/fonts/museosans/343C93_2_0.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    src: url('../js/src/assets/fonts/museosans/343C93_3_0.eot');
+    src: url('../js/src/assets/fonts/museosans/343C93_3_0.eot?#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/museosans/343C93_3_0.woff2') format('woff2'),
+    url('../js/src/assets/fonts/museosans/343C93_3_0.woff') format('woff'),
+    url('../js/src/assets/fonts/museosans/343C93_3_0.ttf') format('truetype');
+    font-style: italic;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    src: url('../js/src/assets/fonts/museosans/343C93_4_0.eot');
+    src: url('../js/src/assets/fonts/museosans/343C93_4_0.eot?#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/museosans/343C93_4_0.woff2') format('woff2'),
+    url('../js/src/assets/fonts/museosans/343C93_4_0.woff') format('woff'),
+    url('../js/src/assets/fonts/museosans/343C93_4_0.ttf') format('truetype');
+    font-style: italic;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'MuseoSans';
+    src: url('../js/src/assets/fonts/museosans/343C93_5_0.eot');
+    src: url('../js/src/assets/fonts/museosans/343C93_5_0.eot?#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/museosans/343C93_5_0.woff2') format('woff2'),
+    url('../js/src/assets/fonts/museosans/343C93_5_0.woff') format('woff'),
+    url('../js/src/assets/fonts/museosans/343C93_5_0.ttf') format('truetype');
+    font-style: italic;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../js/src/assets/fonts/icomoon/icomoon.eot?1no380');
+    src:  url('../js/src/assets/fonts/icomoon/icomoon.eot?1no380#iefix') format('embedded-opentype'),
+    url('../js/src/assets/fonts/icomoon/icomoon.ttf?1no380') format('truetype'),
+    url('../js/src/assets/fonts/icomoon/icomoon.woff?1no380') format('woff'),
+    url('../js/src/assets/fonts/icomoon/icomoon.svg?1no380#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-search:before {
+    content: "\e906";
+}
+.icon-add:before {
+    content: "\e904";
+}
+.icon-check:before {
+    content: "\e905";
+}
+.icon-arrow-down:before {
+    content: "\e900";
+}
+.icon-arrow-left:before {
+    content: "\e901";
+}
+.icon-arrow-right:before {
+    content: "\e902";
+}
+.icon-arrow-up:before {
+    content: "\e903";
+}

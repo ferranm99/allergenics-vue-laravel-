@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: Title
+  description: Title
+  version: 1.0.0
+
+########################################################################
+# SERVERS
+servers:
+  - description: Local dev server (uses test data)
+    url: https://allergenics-v4.test/api
+
+
+########################################################################
+# TAGS
+tags:
+  - name: Authenicated
+    description: The user needs a current authenciated session
+
+  - name: Public
+    description: General access by anyone
+
+paths:
+

@@ -1,0 +1,7 @@
+### Request structure
+
+Method Request-URI HTTP-Version
+Header-field: Header-value
+
+request-Body
+

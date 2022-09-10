@@ -1,0 +1,1584 @@
+openapi: 3.0.3
+info:
+  title: Allergnics Testting Frontend
+  version: 1.0.0
+servers:
+  - description: Local dev server (uses test data)
+    url: https://allergenics-v4.test/api
+
+
+########
+# TAGS
+
+tags:
+  - name: Authenicated
+    description: The user needs a current authenciated session
+
+  - name: Public
+    description: General access by anyone
+
+paths:
+  #
+  # Password reset/forgot section
+  #
+
+  '/auth/password/email':
+    post:
+      tags:
+        - Public
+      requestBody:
+        required: true
+        description: A JSON object containing the email address \
+          to send the reset link email too, this must be \
+          done before the reset endpoint as it generates the token
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+            example:
+              {
+                "email": "carl@16hands.co.nz"
+              }
+      responses:
+        200:
+          description: confirms email was sent
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+              example:
+                {
+                  "message": "We have e-mailed your password reset link!"
+                }
+        422:
+          description: Unprocessable Entity, validation failed (an error response is sent)
+
+  '/auth/password/reset':
+    post:
+      tags:
+        - Public
+      requestBody:
+        required: true
+        description: A JSON object containing the email address to send the reset link email too, this must be done before the reset endpoint as it generates the token
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  type: string
+                  description: this is generated fro the email which is sent, the link need to be something like, <site>/password/reset/{token} with which you show the password reset form which has just the password @ password_confirmation (not email or token), then you send all 4 of these to this endpoint, the token time out so a posiable error coudl be token has timed out
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+            example:
+              {
+                "email": "carl@16hands.co.nz",
+                "password": "somefanceypassowrd",
+                "password_confirmation": "somefanceypassowrd",
+                "token": "9f20710aa0f743627d9edcd5ee4a372237e0c5b645177bbce3b98f70b33d9914"
+              }
+      responses:
+        200:
+          description: confirms email was sent
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+              example:
+                {
+                  "message": "We have e-mailed your password reset link!"
+                }
+        422:
+          description: Unprocessable Entity, validation failed (an error response is sent)
+
+
+  #
+  # Content section
+  #
+  '/api/content/{page_slug}':
+    get:
+      parameters:
+        - name: page_slug
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'why-allergenics'
+      tags:
+        - Public
+      summary: About us content
+      responses:
+        200:
+          description: About us content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/content_page'
+  '/content/terms':
+    get:
+      tags:
+        - Public
+      summary: T&C's content
+      responses:
+        200:
+          description: T&C's content
+          content:
+            application/json:
+              schema:
+                properties:
+                  terms_heading:
+                    type: string
+                  terms_content:
+                    type: string
+                example: >
+                  {
+                    "terms_heading": "Showday.online Terms & Conditions",
+                    "terms_content": "<p>\nT&C's\n<\/p>"
+                  }
+  '/content/privacy-policy':
+    get:
+      tags:
+        - Public
+      summary: privacy_policy content
+      responses:
+        200:
+          description: privacy_policy content
+          content:
+            application/json:
+              schema:
+                properties:
+                  privacy_policy_heading:
+                    type: string
+                  privacy_policy_content:
+                    type: string
+                example: >
+                  {
+                    "privacy_policy_heading": "Showday.online Privacy Policy",
+                    "privacy_policy_content": "<p>\nhuge Privacy Policy\n<\/p>"
+                  }
+
+  '/content/contact-us':
+    get:
+      tags:
+        - Public
+      summary: ontact-us content
+      responses:
+        200:
+          description: contact-us content
+          content:
+            application/json:
+              schema:
+                properties:
+                  contact_us_heading:
+                    type: string
+                  contact_us_top_text:
+                    type: string
+                  contact_us_bottom_text:
+                    type: string
+                example: >
+                  {
+                    "contact_us_heading": "Contact Showday",
+                    "contact_us_top_text": "<p>\nThis is the contact us top text\n<\/p>",
+                    "contact_us_bottom_text": "<p>\nThis is the contact us bottom text\n<\/p>"
+                  }
+
+
+  #
+  # Country section
+  #
+  '/country':
+    get:
+      tags:
+        - Public
+      summary: get the current country
+      responses:
+        200:
+          description: All shows as a light response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/country'
+
+    post:
+      tags:
+        - Public
+      requestBody:
+        required: true
+        description: A JSON object containing the user fields
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/country'
+            example:
+              {
+                "country": "NZ"
+              }
+      responses:
+        200:
+          description: set the country
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/country'
+        400:
+          description: bad input, must be one of 'NZ' or 'AU'
+
+
+  ##
+  # USERS
+  #
+  '/user':
+    get:
+      security:
+        - sancumAuth: [ ]
+      description: Get the logged in users details
+      tags:
+        - Authenicated
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '403':
+          description: Access Denied
+
+
+  '/user/profile':
+    get:
+      security:
+        - sancumAuth: [ ]
+      description: User Account.
+      tags:
+        - Authenicated
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/class'
+        '403':
+          description: Access Denied
+
+  ##
+  # USER ACCOUNT
+  #
+  '/user/account/profile':
+    get:
+      security:
+        - sancumAuth: [ ]
+      description: Get users profile
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              example: >
+                {
+                  "data": [
+
+                  ]
+                }
+        403:
+          description: Access Denied
+
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      security:
+        - sancumAuth: [ ]
+      description: Get users profile
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+              example: >
+                {
+                  "data": [
+
+                  ]
+                }
+        403:
+          description: Access Denied
+
+
+
+
+  ##
+  # USER ORDERS
+  #
+
+  '/api/order/who':
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - first_name
+                - last_name
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+            example: >
+              {
+                "first_name": "Bob",
+                "last_name": "Builder"
+              }
+
+      security:
+        - sancumAuth: []
+      description: Start an Order, this sets up the cart session, the real order is made on the checkout
+      tags:
+        - Authenicated
+        - Public
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order'
+              example: >
+                {
+                  "data": {
+
+                  }
+                }
+        422:
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        403:
+          description: Access Denied
+
+
+  '/user/orders':
+    get:
+      security:
+        - sancumAuth: [ ]
+      description: List users existing orders
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/orders'
+              example: >
+                {
+                  "data": [
+                    {
+                      "id": 1,
+                      "uuid": "7735aaec-172b-4571-98ec-5054a20726a2",
+                      "user_id": 3,
+                      "order_number": null,
+                      "type": "Entry",
+                      "entry_type": "individual",
+                      "source": "Web",
+                      "charge_tax": 1,
+                      "remaining": null,
+                      "tax": null,
+                      "tax_rate": null,
+                      "gross": null,
+                      "net": null,
+                      "payment": null,
+                      "payment_type": "BankTransfer",
+                      "notes": null,
+                      "status": "new",
+                      "step": "step1",
+                      "tax_number": null,
+                      "version": null,
+                      "created_at": "2020-08-24T00:28:09.000000Z",
+                      "updated_at": "2020-08-24T00:28:09.000000Z",
+                    }
+                  ]
+                }
+        403:
+          description: Access Denied
+
+  '/user/orders/active':
+    get:
+      security:
+        - sancumAuth: [ ]
+      description: List users active orders fro all shows
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/orders'
+              example: >
+                {
+                  "data": {
+                    "a2405b4b-5403-4316-87f2-2a7a66c77749": {
+                      "id": 2,
+                      "uuid": "13db7338-9e39-412f-a66d-b9f35166b402",
+                      "user_id": 1,
+                      "people_uuid": "35c397d8-2cf2-4153-80cf-7ee63826bd68",
+                      "show_uuid": "a2405b4b-5403-4316-87f2-2a7a66c77749",
+                      "order_number": null,
+                      "type": "Entry",
+                      "entry_type": "individual",
+                      "source": "Web",
+                      "charge_tax": 1,
+                      "membership": "Member",
+                      "remaining": null,
+                      "tax": null,
+                      "tax_rate": null,
+                      "gross": null,
+                      "net": null,
+                      "payment": null,
+                      "payment_type": "BankTransfer",
+                      "notes": null,
+                      "step": "step1",
+                      "status": "new",
+                      "tax_number": null,
+                      "version": null,
+                      "created_at": "2020-08-18T09:09:47.000000Z",
+                      "updated_at": "2020-08-18T09:09:47.000000Z",
+                      "entries": [
+                        {
+                          "uuid": "ba713942-4cde-4fdd-8941-7020610155e2",
+                          "order_id": 2,
+                          "entrant_id": 1,
+                          "exhibit_id": 1,
+                          "qty": 1,
+                          "show_uuid": "a2405b4b-5403-4316-87f2-2a7a66c77749",
+                          "area_uuid": "f2a8a1c0-7388-4d80-ad2b-eda449084e55",
+                          "section_uuid": "118b19ae-3dea-4634-b26f-31cd205c4e15",
+                          "in_subsection": 0,
+                          "subsection_uuid": null,
+                          "class_uuid": "b74d76c3-eba1-4564-afa8-b77a74d5a399",
+                          "extra_fields": [
+                            {
+                              "id": 12,
+                              "entry_id": 4,
+                              "name": "Pony Club",
+                              "field_name": "fieldName1",
+                              "value": null,
+                              "seq": 1,
+                              "type": "extraArea",
+                              "is_date": 0,
+                              "is_area": 1,
+                              "is_section": 0,
+                              "created_at": "2020-08-19T19:29:50.000000Z",
+                              "updated_at": "2020-08-19T19:29:50.000000Z"
+                            }
+                          ],
+                          "source": "Web",
+                          "invoice_complete": 0,
+                          "entry_seq": 1,
+                          "invoice_seq": 1,
+                          "gross": null,
+                          "notes": null
+                        },
+                        {
+                          "uuid": "45988b64-eef2-48e1-9350-bfc4d1982af0",
+                          "order_id": 2,
+                          "entrant_id": 1,
+                          "exhibit_id": 1,
+                          "qty": 1,
+                          "show_uuid": "a2405b4b-5403-4316-87f2-2a7a66c77749",
+                          "area_uuid": "579066f3-eadf-4f70-b376-7c9177c7ec3a",
+                          "section_uuid": "b44c9dec-b4f5-45be-9d67-080a5ad61c0c",
+                          "in_subsection": 0,
+                          "subsection_uuid": null,
+                          "class_uuid": "ac8bd6a0-78a9-40de-9110-9802bebef946",
+                          "extra_fields": [
+                            {
+                              "id": 13,
+                              "entry_id": 5,
+                              "name": "Pony Club",
+                              "field_name": "fieldName1",
+                              "value": null,
+                              "seq": 1,
+                              "type": "extraArea",
+                              "is_date": 0,
+                              "is_area": 1,
+                              "is_section": 0,
+                              "created_at": "2020-08-19T19:30:01.000000Z",
+                              "updated_at": "2020-08-19T19:30:01.000000Z"
+                            },
+                            {
+                              "id": 14,
+                              "entry_id": 5,
+                              "name": "Age of Rider",
+                              "field_name": "fieldName2",
+                              "value": null,
+                              "seq": 2,
+                              "type": "extraArea",
+                              "is_date": 0,
+                              "is_area": 1,
+                              "is_section": 0,
+                              "created_at": "2020-08-19T19:30:01.000000Z",
+                              "updated_at": "2020-08-19T19:30:01.000000Z"
+                            },
+                            {
+                              "id": 15,
+                              "entry_id": 5,
+                              "name": "Height of Horse\/Pony",
+                              "field_name": "fieldName3",
+                              "value": null,
+                              "seq": 3,
+                              "type": "extraArea",
+                              "is_date": 0,
+                              "is_area": 1,
+                              "is_section": 0,
+                              "created_at": "2020-08-19T19:30:01.000000Z",
+                              "updated_at": "2020-08-19T19:30:01.000000Z"
+                            }
+                          ],
+                          "source": "Web",
+                          "invoice_complete": 0,
+                          "entry_seq": 1,
+                          "invoice_seq": 1,
+                          "gross": null,
+                          "notes": null
+                        }
+                      ],
+                      "extras": [],
+                      "memberships": []
+                    },
+                    "3c7cef15-18f7-4b5b-88ac-36f54948aecb": {
+                      "id": 3,
+                      "uuid": "84c7e718-0f07-4549-a326-2605cb1ba3eb",
+                      "user_id": 1,
+                      "people_uuid": "1bc7890c-766c-4dcc-ad36-3b833111d47a",
+                      "show_uuid": "3c7cef15-18f7-4b5b-88ac-36f54948aecb",
+                      "order_number": null,
+                      "type": "Entry",
+                      "entry_type": "individual",
+                      "source": "Web",
+                      "charge_tax": 1,
+                      "membership": "Member",
+                      "remaining": null,
+                      "tax": null,
+                      "tax_rate": null,
+                      "gross": null,
+                      "net": null,
+                      "payment": null,
+                      "payment_type": "BankTransfer",
+                      "notes": null,
+                      "step": "step1",
+                      "status": "new",
+                      "tax_number": null,
+                      "version": null,
+                      "created_at": "2020-08-20T08:57:26.000000Z",
+                      "updated_at": "2020-08-20T08:57:26.000000Z",
+                      "entries": [],
+                      "extras": [],
+                      "memberships": []
+                    }
+                  }
+                }
+        403:
+          description: Access Denied
+
+
+  ##
+  # ORDERS
+  #
+  '/user/order/{id}':
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      security:
+        - sancumAuth: [ ]
+      description: get order with uuid for this account
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order'
+    put:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/order'
+      security:
+        - sancumAuth: [ ]
+      description: Update an Order
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+        422:
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+    delete:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      security:
+        - sancumAuth: [ ]
+      description: Delete and Order
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid request
+  ##
+  # ORDER ITEMS
+  #
+  '/api/order/items':
+    post:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/entry'
+            example: >
+              {
+                "entrant_id": 1,
+                "exhibit_id": 1
+              }
+
+      security:
+        - sancumAuth: [ ]
+      description: Create an empty order for this account
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entry'
+        400:
+          description: Invalid request
+        422:
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        403:
+          description: Access Denied
+
+  '/user/order/{order_id}/groupentry':
+    post:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/entry'
+            example: >
+              # group_entry is set on the controller action
+              {
+                "group_entrant_name": "Class 10, Southbridge School",
+                "group_entrants": "Ernest Rutherford
+                                   Kate Sheppard
+                                   Āpirana Ngata
+                                   William Hobson
+                                   Jean Batten
+                                   Brian Barratt-Boyes
+                                   Peter Snell
+                                   William Pickering
+                                   Peter Jackson
+                                   Janet Frame
+                                   Te Rauparaha
+                                   Colin Meads
+                                   Whina Cooper
+                                   Katherine Mansfield"
+              }
+
+      security:
+        - sancumAuth: [ ]
+      description: Create an empty order for this account
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entry'
+        400:
+          description: Invalid request
+        422:
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        403:
+          description: Access Denied
+
+  '/user/order/{order_id}/entries':
+    get:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+      security:
+        - sancumAuth: [ ]
+      description: Get entries for order_id
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entries'
+
+  '/user/order/{order_id}/entry/{entry_id}':
+    get:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: entry_id
+          in: path
+          required: true
+          schema:
+            type: number
+      security:
+        - sancumAuth: [ ]
+      description: Get entry with entry_id for order_id
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/entry'
+        400:
+          description: 'Invalid request'
+        403:
+          description: Access Denied
+    put:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: entry_id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/entry'
+            example: >
+              change the entrant for entry
+              {
+                "entrant_id": 1
+              }
+              or change the exhibit for entry
+              {
+                "exhibit_id": 3
+              }
+
+      security:
+        - sancumAuth: [ ]
+      description: Update entry with entry_id for order_id
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: Ok
+        400:
+          description: 'Invalid request'
+        422:
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        403:
+          description: Access Denied
+    delete:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: entry_id
+          in: path
+          required: true
+          schema:
+            type: number
+      security:
+        - sancumAuth: [ ]
+      description: Delete entry with entry_id from order_id
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: Ok
+        400:
+          description: Invalid request
+        403:
+          description: Access Denied
+
+  ##
+  # ORDER ITEMS
+  #
+
+
+  ##
+  # Order Payments
+  #
+  '/api/user/order/{order_id}/payment/{type}':
+    post:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [ stripe,invoice ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+              properties:
+                amount:
+                  type: number
+            example: >
+              {
+                 "amount": 21.56
+              }
+      description: stripe,invoice
+      responses:
+        200:
+          description: OK success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/orderPaymentResponse'
+              example: >
+                {
+                   "result": "success"
+                }
+        400:
+          description: Error, if a error and redirect are returned, the customer should the message with a 'continue' button which takes them to the redirect url
+          content:
+            application/json:
+              example: >
+                {
+                   "result": "error",
+                   "error_message": "Could not process payment",
+                   "redirect": "??"
+                }
+              schema:
+                $ref: '#/components/schemas/orderPaymentResponse'
+
+  ##
+  # Order Complete
+  #
+  '/user/order/{order_id}/complete':
+    post:
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - complete
+              properties:
+                complete:
+                  type: boolean
+            example: >
+              {
+                "complete": true
+              }
+      security:
+        - sancumAuth: [ ]
+      description: Upload a file to this order, Dragana note this is just a plain form not json, this should let you track teh upload. There will also be a delay once teh file has been uplaoded as its moved to S3 in the one request, this should be pretty quick once the site is on a AWS server
+      tags:
+        - Authenicated
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              example: >
+                {
+                   "result": "success",
+                   "redirect": "/"
+                }
+              schema:
+                $ref: '#/components/schemas/orderCompleteResponse'
+
+        400:
+          description: Error Completing order
+          content:
+            application/json:
+              example: >
+                {
+                   "result": "error",
+                   "error_message": "Could not process order, please email amy@showdayonline.com"
+                }
+              schema:
+                $ref: '#/components/schemas/orderCompleteResponse'
+
+
+
+
+
+#########################################################################
+##  Schemas
+#########################################################################
+
+components:
+  schemas:
+    #
+    # Validation Error schemas
+    #
+    ValidationErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      type: object
+      properties:
+        field:
+          type: array
+          items:
+            properties:
+              message:
+                type: string
+
+    #
+    # Request schemas
+    #
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - password_confirmation
+        - first_name
+        - last_name
+        - address_street
+        - address_suburb
+        - address_city
+        - address_post_code
+        - country
+        - mobile_number
+      properties:
+        title:
+          type: string
+        email:
+          type: string
+          format: email
+          uniqueItems: true
+        password:
+          type: string
+        password_confirmation:
+          type: string
+          description: must match password
+        property:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        date_of_birth:
+          type: string
+        address_street:
+          type: string
+        address_street2:
+          type: string
+        address_suburb:
+          type: string
+        address_city:
+          type: string
+        address_post_code:
+          type: string
+        country:
+          type: string
+          maximum: 2
+          minimum: 2
+          description: NZ / AU
+        mobile_number:
+          type: string
+        phone_number:
+          type: string
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    #
+    # country schema
+    #
+    country:
+      type: string
+      example:
+        {
+          "country": "NZ"
+        }
+
+
+
+    #
+    # Content page schema
+    #
+    content_page:
+      type: object
+      required:
+        - name
+        - slug
+        - locale
+        - template
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        slug:
+          type: string
+        locale:
+          type: string
+          enum:
+            - en_NZ
+            - en_AU
+        template:
+          type: string
+        seo_title:
+          type: string
+        seo_description:
+          type: string
+        seo_image:
+          type: string
+          description: url to image
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/content_data'
+        parent_id:
+          type: integer
+          format: int32
+        preview_token:
+          type: string
+        published:
+          type: boolean
+        draft_parent_id:
+          type: integer
+          format: int32
+        path:
+          type: string
+        locale_parent:
+          type: string
+        parent:
+          $ref: '#/components/schemas/content_page'
+
+    content_data:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      example: >
+        {
+          "experience": "<h1>Experience matters<\/h1><div>Allergenics has been looking after the community in New Zealand since 2003. We offer a high level of service in a fast and effective way. When you order tests with us you are fully supported by a highly qualified team who take pride in what they do.<\/div>",
+          "country_text": "<h1>Based here in NZ<\/h1><div>Allergenics is local, which means our comprehensive tests are able to cater specifically to the requirements of the NZ environment, while also offering a broad range of international food and environmental substances that commonly cause sensitivities.<br><br><\/div><div>Being local also means you’ll receive much faster turnaround times on test results and you can talk to qualified team members here in NZ if you need further support.<\/div>",
+          "practitioners": "<h1>Award winning practitioners<\/h1><div>Our team is comprised of highly qualified health professionals from all areas of natural medicine including Scientists, Naturopaths, Herbalists and Nutritional Medicine Practitioners.<br><br><\/div><div>With the aid of our comprehensive reports we will help you identify your sensitivities, make suggestions of how to avoid them and prescribe specific supplements to improve your health and well-being. Our registered practitioners participate in ongoing education to ensure that they remain at the forefront of research into modern natural medicine.<\/div>",
+          "range": "<h1>A comprehensive range of tests<\/h1><div>While our Food and Environmental test remains the most popular, our new Sleep and Mood test, Comprehensive Male\/Female test and Optimum Nutrition test were developed in response to requests for a wider range of health assessments.<br><br><\/div><div>All our tests are designed to help gain better insight into your overall health and well-being. Allergenics testing covers all major body systems and ages and stages of life.<\/div>",
+          "reporting": "<h1>Comprehensive reporting<\/h1><div>We provide a comprehensive report that is easy to understand, with clear imagery and explanations.<br><br><\/div><div>The information provided will enable you to take charge of making positive changes, address imbalances and put you firmly on the road to good health.<\/div>",
+          "safety": "<h1>Safe for the whole family<\/h1><div>Allergenics tests are a safe and non-invasive option from newborn babies, to athletes and those seeking support while on long term medication.&nbsp;<br><br><\/div><div>Our Comprehensive Male\/Female tests include hormones and body systems specific to gender, while our Sleep and Mood test gives in-depth reporting on required nutrients and the cofactors that are needed for their biochemical transformation.<\/div>",
+          "pricing_plans": "<h1>Pricing Plans<\/h1><ul><li>15 years experience, tried and tested, thousands of happy people who have had life-changing experiences<\/li><li>1st company in NZ to offer hair analysis<\/li><li>Each report is looked over and analysed by our award-winning naturopath and prescription formulated accordingly<\/li><\/ul>",
+          "preferred_by": "<h1>Preferred by Naturopaths<\/h1><div>Hundreds of Naturopaths across Australia and New Zealand use our testing service for their clients.<br><br><\/div><div>If you are already under the guidance of a Naturopath they will be able to incorporate the test results into their treatment plan.<\/div>"
+        }
+
+    #
+    # Order schema
+    #
+    orders:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/order'
+
+    order:
+      type: object
+      required:
+        - uuid
+        - step
+        - status
+      properties:
+        uuid:
+          type: string
+        entry_type:
+          type: string
+          enum:
+            - individual
+            - group
+            - classless
+        membership:
+          type: boolean
+        user_id:
+          type: integer
+          format: int32
+        show_uuid:
+          type: string
+        notes:
+          type: string
+        order_number:
+          type: string
+          description: "The Order ID the customer sees, ie SD-xxxxxxxx"
+        payment_id:
+          type: integer
+          format: int32
+          description: "Order owns a related payment"
+        entries:
+          $ref: '#/components/schemas/entries'
+        extras:
+          $ref: '#/components/schemas/extras'
+        memberships:
+          $ref: '#/components/schemas/memberships'
+        step:
+          type: string
+          enum: [ step1,
+                  step2,
+                  step3,
+                  step4,
+                  step5,
+                  step6,
+                  step7 ]
+        status:
+          type: string
+          enum: [ new,
+                  active,
+                  pending-payment,
+                  processing,
+                  complete,
+                  cancelled,
+                  expired ]
+
+
+    #
+    # Entrant/Rider schema
+    #
+    entrants:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/entrant'
+    entrant:
+      type: object
+      properties:
+        abn_number:
+          type: string
+        address_city:
+          type: string
+        address_post_code:
+          type: string
+        address_property_name:
+          type: string
+        address_street:
+          type: string
+        address_street2:
+          type: string
+        address_suburb:
+          type: string
+        au_bank_account_branch:
+          type: string
+        au_bank_account_bsb:
+          type: string
+        au_bank_account_name:
+          type: string
+        au_bank_account_number:
+          type: string
+        au_bank_name:
+          type: string
+        country:
+          type: string
+        date_of_birth:
+          type: string
+        ea_rider_reg:
+          type: string
+        email:
+          type: string
+        emergency_address_city:
+          type: string
+        emergency_address_post_code:
+          type: string
+        emergency_address_street:
+          type: string
+        emergency_address_street2:
+          type: string
+        emergency_address_suburb:
+          type: string
+        emergency_contact_address:
+          type: string
+        emergency_contact_email:
+          type: string
+        emergency_contact_first_name:
+          type: string
+        emergency_contact_last_name:
+          type: string
+        emergency_contact_phone:
+          type: string
+        emergency_country:
+          type: string
+        esnz_rider_reg:
+          type: string
+        first_name:
+          type: string
+        gst_number:
+          type: string
+        id:
+          type: integer
+          format: int32
+        last_name:
+          type: string
+        mobile_number:
+          type: string
+        nz_bank_account_number:
+          type: string
+        phone_number:
+          type: string
+        society_number:
+          type: string
+        user_id:
+          type: integer
+          format: int32
+        uuid:
+          type: string
+
+    #
+    # Exhibit schema
+    #
+    exhibits:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/exhibit'
+
+
+    exhibitTypes:
+      type: array
+      items:
+        type: string
+
+
+    # User schema
+    #
+    user:
+      type: object
+      properties:
+        uuid:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        people_uuid:
+          type: string
+        title:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        property_name:
+          type: string
+        address_street:
+          type: string
+        address_street2:
+          type: string
+        address_suburb:
+          type: string
+        address_city:
+          type: string
+        address_post_code:
+          type: string
+        country:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        phone_number:
+          type: string
+        mobile_number:
+          type: string
+
+
+    #
+    # Show schemas
+    #
+    shows:
+      type: array
+      items:
+        $ref: '#/components/schemas/show'
+
+    show:
+      type: object
+      properties:
+        uuid:
+          type: string
+        associationUuid:
+          type: string
+        association:
+          $ref: '#/components/schemas/association'
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        address3:
+          type: string
+        notes:
+          type: string
+        termsAndConditions:
+          type: string
+        mode:
+          type: string
+        areaName:
+          type: string
+        areasName:
+          type: string
+        sectionName:
+          type: string
+        sectionsName:
+          type: string
+        subsectionName:
+          type: string
+        subsectionsName:
+          type: string
+        className:
+          type: string
+        classesName:
+          type: string
+        onlineOpeningDate:
+          type: string
+        onlineClosingDate:
+          type: string
+        onlineClosingDateFrom:
+          type: string
+        onlineClosingDateTo:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        paymentTypes:
+          type: array
+          items:
+            type: string
+        ccGateway:
+          type: string
+        ccGatewayKey:
+          type: string
+        ccGatewayPass:
+          type: string
+        accountName:
+          type: string
+        accountNo:
+          type: string
+        bank:
+          type: string
+        branch:
+          type: string
+        secretary:
+          type: string
+        secretaryEmail:
+          type: string
+        secretaryPhone:
+          type: string
+        textDate:
+          type: string
+        venue:
+          type: string
+        currency:
+          type: string
+        confirmationSubject:
+          type: string
+        confirmationMessage:
+          type: string
+        acknowledgementSubject:
+          type: string
+        acknowledgementMessage:
+          type: string
+        website:
+          type: string
+        webEntryEnabled:
+          type: boolean
+        active:
+          type: boolean
+        version:
+          type: integer
+          format: int32
+        areas:
+          type: array
+          items:
+            $ref: '#/components/schemas/areaItem'
+        status:
+          type: string
+        documents:
+          $ref: '#/components/schemas/documents'
+        has_memberships:
+          type: boolean
+
+
+    orderPaymentResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          enum: [ success, error ]
+        redirect:
+          type: string
+          nullable: true
+          description: redirect user only when present
+        data:
+          type: string
+          nullable: true
+        error_message:
+          type: string
+          nullable: true
+
+    orderCompleteResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          enum: [ success, error ]
+        redirect:
+          type: string
+          nullable: true
+          description: redirect user only when present
+        data:
+          type: string
+          nullable: true
+        error_message:
+          type: string
+          nullable: true
+
+
+  securitySchemes:
+    sancumAuth: # arbitrary name for the security scheme; will be used in the "security" key later
+      type: apiKey  # note: this is really a Laravel Session cookie
+      in: cookie
+      name: showday_session  # cookie name
